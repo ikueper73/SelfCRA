@@ -1,0 +1,1110 @@
+{
+ "schema": 1,
+ "catalogVersion": "2026.11-1",
+ "meta": {
+  "title": "Example – Wastewater pump controller (commercial)",
+  "status": "draft",
+  "version": "0.1"
+ },
+ "profile": {
+  "markets": [
+   "professional"
+  ],
+  "standards": {
+   "en18031": true,
+   "en303645": false,
+   "iec62443": true
+  },
+  "ukMarket": false,
+  "tailorMade": false
+ },
+ "method": {
+  "preset": "imported",
+  "label": "Imported from template",
+  "likelihoodColumns": [
+   "Exposure / attack path",
+   "Attacker capability needed",
+   "Indicators"
+  ],
+  "likelihood": [
+   {
+    "level": 1,
+    "label": "Rare",
+    "criteria": [
+     "Requires physical access to locked site AND insider knowledge",
+     "Nation-state / highly specialised",
+     "No known technique"
+    ]
+   },
+   {
+    "level": 2,
+    "label": "Unlikely",
+    "criteria": [
+     "Local network or physical access required",
+     "Skilled, targeted attacker",
+     "Theoretical technique, no public tooling"
+    ]
+   },
+   {
+    "level": 3,
+    "label": "Possible",
+    "criteria": [
+     "Reachable via cloud/portal with valid credentials",
+     "Moderate skill, some resources",
+     "Public technique, needs adaptation"
+    ]
+   },
+   {
+    "level": 4,
+    "label": "Likely",
+    "criteria": [
+     "Internet-reachable; credentials obtainable by phishing / reuse",
+     "Low skill with public tools",
+     "Public exploit / commonly seen in OT incidents"
+    ]
+   },
+   {
+    "level": 5,
+    "label": "Almost certain",
+    "criteria": [
+     "Internet-exposed, unauthenticated",
+     "Automated / opportunistic",
+     "Actively exploited in the wild (CISA KEV etc.)"
+    ]
+   }
+  ],
+  "impactColumns": [
+   "Safety / environment",
+   "Service (pumping, alarms)",
+   "Data & scale"
+  ],
+  "impact": [
+   {
+    "level": 1,
+    "label": "Negligible",
+    "criteria": [
+     "None",
+     "No interruption",
+     "Non-sensitive data, single device"
+    ]
+   },
+   {
+    "level": 2,
+    "label": "Minor",
+    "criteria": [
+     "None",
+     "Monitoring loss < 4 h, local control unaffected",
+     "Limited data of one customer"
+    ]
+   },
+   {
+    "level": 3,
+    "label": "Moderate",
+    "criteria": [
+     "Minor local spill, no lasting harm",
+     "Monitoring/alarm loss > 4 h at one site",
+     "Personal data of one customer; several sites"
+    ]
+   },
+   {
+    "level": 4,
+    "label": "Major",
+    "criteria": [
+     "Reportable overflow / environmental incident",
+     "Loss of control at a site; alarms lost across a customer",
+     "Many customers' data; one customer's fleet"
+    ]
+   },
+   {
+    "level": 5,
+    "label": "Severe",
+    "criteria": [
+     "Injury risk, major environmental damage",
+     "Multi-site/fleet-wide manipulation or outage",
+     "Fleet-wide compromise across customers"
+    ]
+   }
+  ],
+  "thresholds": [
+   {
+    "rating": "Critical",
+    "min": 16,
+    "rule": "Not acceptable. Must be mitigated before placing on the market."
+   },
+   {
+    "rating": "High",
+    "min": 10,
+    "rule": "Mitigate; residual High only with documented management acceptance and justification."
+   },
+   {
+    "rating": "Medium",
+    "min": 5,
+    "rule": "Mitigate where reasonable; acceptance by product security owner with justification."
+   },
+   {
+    "rating": "Low",
+    "min": 1,
+    "rule": "Acceptable; monitor at periodic review."
+   }
+  ],
+  "approvedBy": "",
+  "approvedAt": ""
+ },
+ "reviewLog": [
+  {
+   "version": "0.1",
+   "date": "2026-10-25",
+   "author": "[Name]",
+   "trigger": "Initial assessment (RED / EN 18031 baseline extended for CRA)",
+   "summary": "Created from template; example risks R-001…R-010 to be validated.",
+   "risks": "R-001…R-010",
+   "approvedBy": "",
+   "approvalDate": ""
+  }
+ ],
+ "product": {
+  "name": "[Product] Remote Monitoring & Support for pump/valve controller",
+  "model": "",
+  "versions": "Controller FW x.y · Gateway FW x.y · Cloud release YYYY.MM · App x.y",
+  "manufacturer": "[Company], [Product security owner]",
+  "securityOwner": "",
+  "intendedPurpose": "Remote monitoring of wastewater pump stations and valve controllers (levels, flows, pump states, alarms) and remote support / parameter changes by authorised manufacturer and customer technicians.",
+  "foreseeableUse": "Operation at unmanned sites; use on flat OT networks without segmentation; shared technician accounts; remote access left permanently enabled; connection via customer-supplied routers; use beyond end of support.",
+  "users": "Utility operator (read, acknowledge alarms) · Customer technician (setpoints) · Manufacturer support (remote session) · Integrator (commissioning)",
+  "environment": "Wastewater utilities (NIS2 Annex I essential sector); unattended outdoor pump stations; LTE or customer Ethernet uplink; public cloud backend operated by manufacturer.",
+  "essentialFunctions": "Local pump/valve control MUST continue without connectivity; alarm delivery; local manual override.",
+  "safetyFunctions": "",
+  "expectedLifetime": "",
+  "rdps": "Cloud backend, support portal, device management service",
+  "outOfScope": "Customer SCADA, customer network, technician laptops (assumptions recorded in Zones sheet)",
+  "personalData": "Operator names, phone numbers / e-mails for alarm notification; technician IDs in logs",
+  "thirdParty": "",
+  "hardwareDocs": ""
+ },
+ "classification": {
+  "selected": {},
+  "notes": "Contains router/modem intended for internet connection? (Annex III Class I): No – gateway is an endpoint only, no routing for third-party devices [VERIFY]\nAny other Annex III / IV category? (e.g. network management, VPN, security functions): No [VERIFY – remote support function]\n",
+  "reviewed": false,
+  "standardsInFull": "",
+  "route": "Module A (internal control)"
+ },
+ "supportPeriod": {
+  "years": "10",
+  "endDate": "",
+  "rationale": "e.g. 10 years / 2036-12-31",
+  "updateChannel": "Signed OTA via cloud; local USB fallback",
+  "autoUpdates": "",
+  "endOfSupport": ""
+ },
+ "regulation": {
+  "red": "EN 18031-1 applied; -2 [Y/N]; -3 n/a",
+  "machinery": "[Applicable? Y/N – if controller is safety-related part of a machine]",
+  "productSafety": "",
+  "nis2": "",
+  "customerFrameworks": "NIS2 supply-chain requirements; IEC 62443-2-4 / 3-3 requests from utilities",
+  "ecosystems": "",
+  "psti": "",
+  "other": ""
+ },
+ "standardsApplied": [],
+ "components": [
+  {
+   "id": "Z-1",
+   "name": "Field control",
+   "description": "Pump/valve controller (PLC), I/O, local HMI",
+   "location": "Pump station",
+   "operatedBy": "Customer",
+   "scope": "Product (hardware/firmware)",
+   "slT": "SL 2",
+   "rationale": "Direct control of physical process – overflow / environmental release",
+   "assumptions": "Station locked; physical access by authorised staff only"
+  },
+  {
+   "id": "Z-2",
+   "name": "Edge gateway",
+   "description": "Comms gateway (LTE/Ethernet), remote-session agent",
+   "location": "Pump station",
+   "operatedBy": "Customer",
+   "scope": "Product (hardware/firmware)",
+   "slT": "SL 2",
+   "rationale": "Only internet-facing component on site; bridge into Z-1",
+   "assumptions": "No inbound ports opened by customer"
+  },
+  {
+   "id": "Z-3",
+   "name": "Cloud backend",
+   "description": "Device mgmt, telemetry, alarm service, remote-session broker, update server",
+   "location": "Cloud (EU region)",
+   "operatedBy": "Manufacturer",
+   "scope": "Remote data processing (RDPS)",
+   "slT": "SL 3",
+   "rationale": "Single point that reaches the whole fleet",
+   "assumptions": "Cloud provider shared-responsibility controls in place"
+  },
+  {
+   "id": "Z-4",
+   "name": "Support access",
+   "description": "Support portal, technician identities",
+   "location": "Manufacturer / customer offices",
+   "operatedBy": "Manufacturer",
+   "scope": "Remote data processing (RDPS)",
+   "slT": "SL 3",
+   "rationale": "Path that can change process parameters remotely",
+   "assumptions": "Technician endpoints managed by manufacturer IT (out of scope)"
+  },
+  {
+   "id": "Z-5",
+   "name": "Operator apps",
+   "description": "Web app, mobile app",
+   "location": "Customer devices",
+   "operatedBy": "Customer",
+   "scope": "Product (software/app)",
+   "slT": "SL 2",
+   "rationale": "Read access + alarm acknowledgement",
+   "assumptions": ""
+  }
+ ],
+ "interfaces": [
+  {
+   "id": "C-1",
+   "name": "Telemetry + setpoint writes",
+   "from": "Z-1",
+   "to": "Z-2",
+   "protocol": "Modbus TCP 502 / RS-485",
+   "exposure": "",
+   "protection": "None (local segment) – [risk]",
+   "defaultState": "",
+   "needed": "",
+   "remoteAccess": "No",
+   "notes": "Gateway polls controller · Legacy protocol without auth"
+  },
+  {
+   "id": "C-2",
+   "name": "Telemetry, alarms, commands, OTA",
+   "from": "Z-2",
+   "to": "Z-3",
+   "protocol": "MQTT over TLS 8883",
+   "exposure": "",
+   "protection": "Mutual TLS, per-device X.509",
+   "defaultState": "",
+   "needed": "",
+   "remoteAccess": "No",
+   "notes": "Gateway, outbound only"
+  },
+  {
+   "id": "C-3",
+   "name": "Support portal",
+   "from": "Z-4",
+   "to": "Z-3",
+   "protocol": "HTTPS 443",
+   "exposure": "",
+   "protection": "SSO + MFA, RBAC",
+   "defaultState": "",
+   "needed": "",
+   "remoteAccess": "Yes",
+   "notes": "Technician browser"
+  },
+  {
+   "id": "C-4",
+   "name": "Remote support session to controller",
+   "from": "Z-3",
+   "to": "Z-2",
+   "protocol": "Session tunnel inside C-2",
+   "exposure": "",
+   "protection": "Mutual TLS, session token, command allowlist",
+   "defaultState": "",
+   "needed": "",
+   "remoteAccess": "Yes",
+   "notes": "Broker; must be approved locally · Highest-risk path"
+  },
+  {
+   "id": "C-5",
+   "name": "Commissioning, offline update",
+   "from": "Local",
+   "to": "Z-2",
+   "protocol": "USB / Ethernet service port",
+   "exposure": "",
+   "protection": "Local account [define]",
+   "defaultState": "",
+   "needed": "",
+   "remoteAccess": "No",
+   "notes": "Technician on site · Physical diagnostic interface"
+  },
+  {
+   "id": "C-6",
+   "name": "Monitoring, alarm ack",
+   "from": "Z-5",
+   "to": "Z-3",
+   "protocol": "HTTPS 443",
+   "exposure": "",
+   "protection": "OIDC login, MFA optional",
+   "defaultState": "",
+   "needed": "",
+   "remoteAccess": "No",
+   "notes": "User app"
+  }
+ ],
+ "assets": [
+  {
+   "id": "A-01",
+   "name": "Pump/valve control logic & setpoints",
+   "component": "Z-1",
+   "type": "Function (essential)",
+   "description": "Control program, level thresholds, pump schedules",
+   "c": "Low",
+   "i": "High",
+   "a": "High",
+   "impact": "Overflow, pump damage, environmental release"
+  },
+  {
+   "id": "A-02",
+   "name": "Remote-session capability",
+   "component": "Z-2",
+   "type": "Function (essential)",
+   "description": "Ability to open a support session into Z-1",
+   "c": "n/a",
+   "i": "High",
+   "a": "Medium",
+   "impact": "Unauthorised process manipulation"
+  },
+  {
+   "id": "A-03",
+   "name": "Device identity (private key + certificate)",
+   "component": "Z-2",
+   "type": "Security asset",
+   "description": "Per-device key in secure element",
+   "c": "High",
+   "i": "High",
+   "a": "Medium",
+   "impact": "Device impersonation, MITM"
+  },
+  {
+   "id": "A-04",
+   "name": "Technician credentials & roles",
+   "component": "Z-4",
+   "type": "Security asset",
+   "description": "SSO accounts, MFA factors, role assignments",
+   "c": "High",
+   "i": "High",
+   "a": "Medium",
+   "impact": "Remote access by attacker"
+  },
+  {
+   "id": "A-05",
+   "name": "Firmware images & update signing key",
+   "component": "Z-3",
+   "type": "Security asset",
+   "description": "Signed OTA packages; signing key in HSM",
+   "c": "High",
+   "i": "High",
+   "a": "Medium",
+   "impact": "Fleet-wide malicious firmware"
+  },
+  {
+   "id": "A-06",
+   "name": "Telemetry & alarms",
+   "component": "Z-3",
+   "type": "Data",
+   "description": "Levels, flows, states, alarm events",
+   "c": "Medium",
+   "i": "High",
+   "a": "High",
+   "impact": "Missed alarms, wrong operator decisions"
+  },
+  {
+   "id": "A-07",
+   "name": "Audit / session logs",
+   "component": "Z-3",
+   "type": "Security asset",
+   "description": "Who did what, when, on which site",
+   "c": "Medium",
+   "i": "High",
+   "a": "Medium",
+   "impact": "No forensic trace; repudiation"
+  },
+  {
+   "id": "A-08",
+   "name": "Operator contact data",
+   "component": "Z-3",
+   "type": "Personal data",
+   "description": "Names, phone numbers, e-mail for alarm routing",
+   "c": "High",
+   "i": "Medium",
+   "a": "Medium",
+   "impact": "GDPR breach; alarm misrouting"
+  },
+  {
+   "id": "A-09",
+   "name": "Gateway configuration",
+   "component": "Z-2",
+   "type": "Network asset",
+   "description": "APN, VPN/TLS settings, local accounts, enabled services",
+   "c": "Medium",
+   "i": "High",
+   "a": "Medium",
+   "impact": "Exposure of services, loss of connectivity"
+  }
+ ],
+ "risks": [
+  {
+   "id": "R-001",
+   "interfaces": "C-3 / C-4",
+   "assets": "A-04, A-01",
+   "scenario": "Stolen or phished technician credentials used to open a remote session and change pump setpoints / disable pumps.",
+   "stride": "S - Spoofing",
+   "actor": "External attacker (targeted / skilled)",
+   "vector": "Support portal login",
+   "consequence": "Overflow at one or more stations; environmental incident",
+   "inherentL": "4",
+   "inherentI": "5",
+   "controls": "Phishing-resistant MFA (FIDO2) for all support accounts; named per-technician accounts, no shared logins; RBAC separating monitor-only and write roles; write sessions require operator approval; anomaly alerting on logins.",
+   "annex": [
+    "P1-2d",
+    "P1-2l"
+   ],
+   "en18031": [
+    "AUM",
+    "ACM"
+   ],
+   "en303645": [],
+   "iec62443": "4-2 CR 1.1 RE1/RE2, CR 1.3, CR 2.1",
+   "evidence": "Pen-test report §x; IdP config export; RBAC matrix",
+   "residualL": "2",
+   "residualI": "5",
+   "treatment": "Mitigate",
+   "acceptance": "",
+   "owner": "Head of Support",
+   "status": "In progress",
+   "lastReviewed": "2026-10-25",
+   "source": "xlsx-import"
+  },
+  {
+   "id": "R-002",
+   "interfaces": "C-4",
+   "assets": "A-02",
+   "scenario": "Remote-access tunnel is permanently available, allowing access without the site operator's knowledge.",
+   "stride": "E - Elevation of privilege",
+   "actor": "Malicious insider (support staff)",
+   "vector": "Always-on session broker",
+   "consequence": "Undetected process manipulation",
+   "inherentL": "4",
+   "inherentI": "5",
+   "controls": "Remote write access disabled by default; sessions operator-initiated or approved, time-limited (e.g. 2 h) and auto-terminated; local physical kill switch / HMI toggle; visible session indicator on HMI.",
+   "annex": [
+    "P1-2b",
+    "P1-2d",
+    "P1-2j"
+   ],
+   "en18031": [
+    "ACM",
+    "GEC"
+   ],
+   "en303645": [],
+   "iec62443": "4-2 CR 2.6, CR 2.7, CR 7.7",
+   "evidence": "Default config checklist; test case TC-RS-01..05",
+   "residualL": "2",
+   "residualI": "4",
+   "treatment": "Mitigate",
+   "acceptance": "",
+   "owner": "Product Owner",
+   "status": "Open",
+   "lastReviewed": "2026-10-25",
+   "source": "xlsx-import"
+  },
+  {
+   "id": "R-003",
+   "interfaces": "Z-3",
+   "assets": "A-01, A-06",
+   "scenario": "Compromise of cloud backend used to send commands to all connected sites (fleet-wide attack).",
+   "stride": "T - Tampering",
+   "actor": "External attacker (targeted / skilled)",
+   "vector": "Cloud API / admin plane",
+   "consequence": "Multi-site manipulation; fleet-wide outage",
+   "inherentL": "3",
+   "inherentI": "5",
+   "controls": "Gateway enforces command allowlist and value ranges locally; safety limits in controller not writable remotely; tenant isolation; signed commands; cloud admin MFA + PAM; no inbound ports on gateway.",
+   "annex": [
+    "P1-2d",
+    "P1-2f",
+    "P1-2i",
+    "P1-2k"
+   ],
+   "en18031": [
+    "ACM",
+    "TCM",
+    "SCM"
+   ],
+   "en303645": [],
+   "iec62443": "4-2 CR 2.1, CR 3.1, CR 3.5, CR 5.1",
+   "evidence": "Architecture review; cloud pen-test; ISO 27001 SoA",
+   "residualL": "2",
+   "residualI": "5",
+   "treatment": "Mitigate",
+   "acceptance": "",
+   "owner": "CTO",
+   "status": "Open",
+   "lastReviewed": "2026-10-25",
+   "source": "xlsx-import"
+  },
+  {
+   "id": "R-004",
+   "interfaces": "C-2",
+   "assets": "A-03, A-06",
+   "scenario": "Man-in-the-middle on gateway–cloud link to read or alter telemetry and commands.",
+   "stride": "T - Tampering",
+   "actor": "External attacker (opportunistic)",
+   "vector": "LTE / customer network path",
+   "consequence": "False readings; injected commands",
+   "inherentL": "3",
+   "inherentI": "4",
+   "controls": "Mutual TLS 1.3 with per-device certificates; key stored in secure element; certificate pinning to manufacturer CA; certificate revocation.",
+   "annex": [
+    "P1-2e",
+    "P1-2f"
+   ],
+   "en18031": [
+    "SCM",
+    "CRY",
+    "CCK"
+   ],
+   "en303645": [],
+   "iec62443": "4-2 CR 1.2, CR 1.9, CR 3.1, CR 4.1, CR 4.3",
+   "evidence": "TLS config scan; key provisioning procedure",
+   "residualL": "1",
+   "residualI": "4",
+   "treatment": "Mitigate",
+   "acceptance": "",
+   "owner": "Firmware Lead",
+   "status": "Implemented",
+   "lastReviewed": "2026-10-25",
+   "source": "xlsx-import"
+  },
+  {
+   "id": "R-005",
+   "interfaces": "C-2 / Z-3",
+   "assets": "A-05",
+   "scenario": "Malicious or tampered firmware delivered through the update channel.",
+   "stride": "T - Tampering",
+   "actor": "Compromised supplier / supply chain",
+   "vector": "OTA update service; build pipeline",
+   "consequence": "Fleet-wide persistent compromise",
+   "inherentL": "2",
+   "inherentI": "5",
+   "controls": "Code-signing with key in HSM; signature verification + secure boot on gateway; anti-rollback; reproducible / audited build pipeline.",
+   "annex": [
+    "P1-2c",
+    "P1-2f",
+    "P2-7"
+   ],
+   "en18031": [
+    "SUM",
+    "SSM"
+   ],
+   "en303645": [],
+   "iec62443": "4-2 CR 3.4, CR 3.10, CR 3.14; 4-1 SUM-4",
+   "evidence": "Secure boot test; HSM key ceremony record",
+   "residualL": "1",
+   "residualI": "5",
+   "treatment": "Mitigate",
+   "acceptance": "",
+   "owner": "Firmware Lead",
+   "status": "Implemented",
+   "lastReviewed": "2026-10-25",
+   "source": "xlsx-import"
+  },
+  {
+   "id": "R-006",
+   "interfaces": "C-4 / Z-3",
+   "assets": "A-07",
+   "scenario": "Actions in remote sessions cannot be attributed or reconstructed after an incident.",
+   "stride": "R - Repudiation",
+   "actor": "Malicious insider (support staff)",
+   "vector": "Remote session",
+   "consequence": "Cannot investigate or report incident (Art. 14)",
+   "inherentL": "3",
+   "inherentI": "3",
+   "controls": "Per-user session logging of every parameter change (old/new value, user, time, site); tamper-protected log storage; logs exportable to customer SIEM.",
+   "annex": [
+    "P1-2l"
+   ],
+   "en18031": [
+    "LGM"
+   ],
+   "en303645": [],
+   "iec62443": "4-2 CR 2.8, CR 2.12, CR 3.9, CR 6.1",
+   "evidence": "Log sample; retention policy",
+   "residualL": "1",
+   "residualI": "3",
+   "treatment": "Mitigate",
+   "acceptance": "",
+   "owner": "Cloud Lead",
+   "status": "In progress",
+   "lastReviewed": "2026-10-25",
+   "source": "xlsx-import"
+  },
+  {
+   "id": "R-007",
+   "interfaces": "C-2 / Z-3",
+   "assets": "A-06",
+   "scenario": "Denial of service on gateway or cloud prevents alarm delivery during a high-water event.",
+   "stride": "D - Denial of service",
+   "actor": "External attacker (opportunistic)",
+   "vector": "Internet-facing cloud endpoints; LTE jamming",
+   "consequence": "Missed high-level alarm; overflow",
+   "inherentL": "3",
+   "inherentI": "4",
+   "controls": "Controller keeps local autonomous control; local horn/SMS fallback alarm; cloud rate limiting & DDoS protection; connectivity-loss alarm.",
+   "annex": [
+    "P1-2h",
+    "P1-2i"
+   ],
+   "en18031": [
+    "RLM",
+    "TCM"
+   ],
+   "en303645": [],
+   "iec62443": "4-2 CR 7.1, CR 7.2",
+   "evidence": "Failover test TC-AV-01",
+   "residualL": "2",
+   "residualI": "3",
+   "treatment": "Mitigate",
+   "acceptance": "",
+   "owner": "Product Owner",
+   "status": "Open",
+   "lastReviewed": "2026-10-25",
+   "source": "xlsx-import"
+  },
+  {
+   "id": "R-008",
+   "interfaces": "Z-2",
+   "assets": "A-09",
+   "scenario": "Known exploitable vulnerability in third-party component (e.g. OpenSSL, BusyBox, Linux kernel) on the gateway.",
+   "stride": "E - Elevation of privilege",
+   "actor": "External attacker (opportunistic)",
+   "vector": "Exposed service on gateway",
+   "consequence": "Gateway takeover; pivot to controller",
+   "inherentL": "4",
+   "inherentI": "4",
+   "controls": "SBOM per release; continuous vulnerability monitoring; patch SLA by severity; no known exploitable vulns at release (release gate).",
+   "annex": [
+    "P1-2a",
+    "P2-1",
+    "P2-2",
+    "P2-3"
+   ],
+   "en18031": [
+    "GEC",
+    "SUM"
+   ],
+   "en303645": [],
+   "iec62443": "4-2 CR 3.10, CR 7.8; 4-1 DM-1…DM-6, SUM-1…SUM-5",
+   "evidence": "SBOM (CycloneDX); vuln scan at release",
+   "residualL": "2",
+   "residualI": "4",
+   "treatment": "Mitigate",
+   "acceptance": "",
+   "owner": "PSIRT",
+   "status": "In progress",
+   "lastReviewed": "2026-10-25",
+   "source": "xlsx-import"
+  },
+  {
+   "id": "R-009",
+   "interfaces": "C-5",
+   "assets": "A-01, A-09",
+   "scenario": "On-site service port used to bypass cloud authentication and modify configuration.",
+   "stride": "S - Spoofing",
+   "actor": "Physical intruder on site",
+   "vector": "USB / Ethernet service port",
+   "consequence": "Local process manipulation",
+   "inherentL": "2",
+   "inherentI": "4",
+   "controls": "Service port disabled by default, enabled per session; local unique credentials; physical seal / tamper indication; all local changes logged & synced.",
+   "annex": [
+    "P1-2b",
+    "P1-2d",
+    "P1-2j"
+   ],
+   "en18031": [
+    "ACM",
+    "AUM"
+   ],
+   "en303645": [],
+   "iec62443": "4-2 CR 2.13, CR 3.11, CR 1.1",
+   "evidence": "Hardening checklist",
+   "residualL": "1",
+   "residualI": "4",
+   "treatment": "Mitigate",
+   "acceptance": "",
+   "owner": "Hardware Lead",
+   "status": "Open",
+   "lastReviewed": "2026-10-25",
+   "source": "xlsx-import"
+  },
+  {
+   "id": "R-010",
+   "interfaces": "Z-2",
+   "assets": "A-09",
+   "scenario": "Default or shared password on gateway web UI used to gain administrative access.",
+   "stride": "S - Spoofing",
+   "actor": "External attacker (opportunistic)",
+   "vector": "Gateway web UI",
+   "consequence": "Gateway takeover",
+   "inherentL": "4",
+   "inherentI": "4",
+   "controls": "Unique per-device credentials or forced change at commissioning (no skip option – see EN 18031 OJ restriction); brute-force lockout; web UI not exposed on WAN.",
+   "annex": [
+    "P1-2b",
+    "P1-2d"
+   ],
+   "en18031": [
+    "AUM"
+   ],
+   "en303645": [],
+   "iec62443": "4-2 CR 1.5, CR 1.7, CR 1.11",
+   "evidence": "EN 18031 AUM decision-tree record",
+   "residualL": "1",
+   "residualI": "4",
+   "treatment": "Mitigate",
+   "acceptance": "",
+   "owner": "Firmware Lead",
+   "status": "Implemented",
+   "lastReviewed": "2026-10-25",
+   "source": "xlsx-import"
+  }
+ ],
+ "annexI": {
+  "P1-1": {
+   "applicable": "Yes",
+   "justification": "",
+   "implementation": "",
+   "evidence": ""
+  },
+  "P1-2a": {
+   "applicable": "Yes",
+   "justification": "",
+   "implementation": "",
+   "evidence": ""
+  },
+  "P1-2b": {
+   "applicable": "Yes",
+   "justification": "",
+   "implementation": "Remote write access and service port off by default; unique per-device credentials; factory reset via HMI.",
+   "evidence": "Default config checklist DC-01"
+  },
+  "P1-2c": {
+   "applicable": "Yes",
+   "justification": "",
+   "implementation": "",
+   "evidence": ""
+  },
+  "P1-2d": {
+   "applicable": "Yes",
+   "justification": "",
+   "implementation": "",
+   "evidence": ""
+  },
+  "P1-2e": {
+   "applicable": "Yes",
+   "justification": "",
+   "implementation": "",
+   "evidence": ""
+  },
+  "P1-2f": {
+   "applicable": "Yes",
+   "justification": "",
+   "implementation": "",
+   "evidence": ""
+  },
+  "P1-2g": {
+   "applicable": "Yes",
+   "justification": "",
+   "implementation": "Only process telemetry and alarm-routing contacts collected; no location tracking of technicians.",
+   "evidence": "Data inventory DI-01"
+  },
+  "P1-2h": {
+   "applicable": "Yes",
+   "justification": "",
+   "implementation": "",
+   "evidence": ""
+  },
+  "P1-2i": {
+   "applicable": "Yes",
+   "justification": "",
+   "implementation": "",
+   "evidence": ""
+  },
+  "P1-2j": {
+   "applicable": "Yes",
+   "justification": "",
+   "implementation": "",
+   "evidence": ""
+  },
+  "P1-2k": {
+   "applicable": "Yes",
+   "justification": "",
+   "implementation": "",
+   "evidence": ""
+  },
+  "P1-2l": {
+   "applicable": "Yes",
+   "justification": "",
+   "implementation": "",
+   "evidence": ""
+  },
+  "P1-2m": {
+   "applicable": "Yes",
+   "justification": "",
+   "implementation": "",
+   "evidence": ""
+  },
+  "P2-1": {
+   "applicable": "Yes",
+   "justification": "",
+   "implementation": "",
+   "evidence": ""
+  },
+  "P2-2": {
+   "applicable": "Yes",
+   "justification": "",
+   "implementation": "",
+   "evidence": ""
+  },
+  "P2-3": {
+   "applicable": "Yes",
+   "justification": "",
+   "implementation": "",
+   "evidence": ""
+  },
+  "P2-4": {
+   "applicable": "Yes",
+   "justification": "",
+   "implementation": "",
+   "evidence": ""
+  },
+  "P2-5": {
+   "applicable": "Yes",
+   "justification": "",
+   "implementation": "CVD policy published at /security; triage SLA 5 working days.",
+   "evidence": "PSIRT-POL-001"
+  },
+  "P2-6": {
+   "applicable": "Yes",
+   "justification": "",
+   "implementation": "security@[company] + security.txt on website.",
+   "evidence": "security.txt"
+  },
+  "P2-7": {
+   "applicable": "Yes",
+   "justification": "",
+   "implementation": "",
+   "evidence": ""
+  },
+  "P2-8": {
+   "applicable": "Yes",
+   "justification": "",
+   "implementation": "",
+   "evidence": ""
+  }
+ },
+ "en303645": {
+  "6": {
+   "applicable": "",
+   "justification": "",
+   "implementation": "",
+   "evidence": ""
+  },
+  "5.1": {
+   "applicable": "",
+   "justification": "",
+   "implementation": "",
+   "evidence": ""
+  },
+  "5.2": {
+   "applicable": "",
+   "justification": "",
+   "implementation": "",
+   "evidence": ""
+  },
+  "5.3": {
+   "applicable": "",
+   "justification": "",
+   "implementation": "",
+   "evidence": ""
+  },
+  "5.4": {
+   "applicable": "",
+   "justification": "",
+   "implementation": "",
+   "evidence": ""
+  },
+  "5.5": {
+   "applicable": "",
+   "justification": "",
+   "implementation": "",
+   "evidence": ""
+  },
+  "5.6": {
+   "applicable": "",
+   "justification": "",
+   "implementation": "",
+   "evidence": ""
+  },
+  "5.7": {
+   "applicable": "",
+   "justification": "",
+   "implementation": "",
+   "evidence": ""
+  },
+  "5.8": {
+   "applicable": "",
+   "justification": "",
+   "implementation": "",
+   "evidence": ""
+  },
+  "5.9": {
+   "applicable": "",
+   "justification": "",
+   "implementation": "",
+   "evidence": ""
+  },
+  "5.10": {
+   "applicable": "",
+   "justification": "",
+   "implementation": "",
+   "evidence": ""
+  },
+  "5.11": {
+   "applicable": "",
+   "justification": "",
+   "implementation": "",
+   "evidence": ""
+  },
+  "5.12": {
+   "applicable": "",
+   "justification": "",
+   "implementation": "",
+   "evidence": ""
+  },
+  "5.13": {
+   "applicable": "",
+   "justification": "",
+   "implementation": "",
+   "evidence": ""
+  }
+ },
+ "userInfo": {
+  "U-01": {
+   "where": "",
+   "content": "",
+   "owner": "",
+   "status": "Open",
+   "evidence": ""
+  },
+  "U-02": {
+   "where": "",
+   "content": "",
+   "owner": "",
+   "status": "Open",
+   "evidence": ""
+  },
+  "U-03": {
+   "where": "",
+   "content": "",
+   "owner": "",
+   "status": "Open",
+   "evidence": ""
+  },
+  "U-04": {
+   "where": "",
+   "content": "",
+   "owner": "",
+   "status": "Open",
+   "evidence": ""
+  },
+  "U-05": {
+   "where": "",
+   "content": "",
+   "owner": "",
+   "status": "Open",
+   "evidence": ""
+  },
+  "U-06": {
+   "where": "",
+   "content": "",
+   "owner": "",
+   "status": "Open",
+   "evidence": ""
+  },
+  "U-07": {
+   "where": "",
+   "content": "",
+   "owner": "",
+   "status": "Open",
+   "evidence": ""
+  },
+  "U-08": {
+   "where": "",
+   "content": "",
+   "owner": "",
+   "status": "Open",
+   "evidence": ""
+  },
+  "U-09": {
+   "where": "",
+   "content": "",
+   "owner": "",
+   "status": "Open",
+   "evidence": ""
+  },
+  "U-10": {
+   "where": "",
+   "content": "",
+   "owner": "",
+   "status": "Open",
+   "evidence": ""
+  },
+  "U-11": {
+   "where": "",
+   "content": "",
+   "owner": "",
+   "status": "Open",
+   "evidence": ""
+  },
+  "U-12": {
+   "where": "",
+   "content": "",
+   "owner": "",
+   "status": "Open",
+   "evidence": ""
+  },
+  "U-13": {
+   "where": "",
+   "content": "",
+   "owner": "",
+   "status": "Open",
+   "evidence": ""
+  },
+  "U-14": {
+   "where": "",
+   "content": "",
+   "owner": "",
+   "status": "Open",
+   "evidence": ""
+  },
+  "U-15": {
+   "where": "",
+   "content": "",
+   "owner": "",
+   "status": "Open",
+   "evidence": ""
+  },
+  "U-16": {
+   "where": "",
+   "content": "",
+   "owner": "",
+   "status": "Open",
+   "evidence": ""
+  }
+ }
+}

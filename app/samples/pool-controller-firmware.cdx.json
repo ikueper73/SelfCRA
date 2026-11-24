@@ -1,0 +1,156 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.5",
+  "serialNumber": "urn:uuid:5f0e7c1a-3b2d-4c8e-9a61-2d7b4f9e1c30",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-11-24T09:00:00Z",
+    "tools": {
+      "components": [
+        { "type": "application", "author": "Example", "name": "sample-sbom", "version": "1.0" }
+      ]
+    },
+    "authors": [{ "name": "Product Security Team" }],
+    "supplier": { "name": "Example Pool Systems GmbH" },
+    "component": {
+      "bom-ref": "pool-controller-fw",
+      "type": "firmware",
+      "name": "smart-pool-controller-firmware",
+      "version": "2.3.0",
+      "supplier": { "name": "Example Pool Systems GmbH" },
+      "description": "Embedded Linux firmware of the smart pool controller (pH/chlorine dosing, pump and heater control, Wi-Fi/BLE, cloud connection via MQTT/TLS, local web UI)"
+    }
+  },
+  "components": [
+    {
+      "bom-ref": "busybox",
+      "type": "library",
+      "name": "busybox",
+      "version": "1.33.1",
+      "supplier": { "name": "BusyBox project" },
+      "licenses": [{ "license": { "id": "GPL-2.0-only" } }],
+      "cpe": "cpe:2.3:a:busybox:busybox:1.33.1:*:*:*:*:*:*:*",
+      "purl": "pkg:generic/busybox@1.33.1"
+    },
+    {
+      "bom-ref": "openssl",
+      "type": "library",
+      "name": "openssl",
+      "version": "1.1.1q",
+      "supplier": { "name": "OpenSSL Software Foundation" },
+      "licenses": [{ "license": { "id": "OpenSSL" } }],
+      "cpe": "cpe:2.3:a:openssl:openssl:1.1.1q:*:*:*:*:*:*:*",
+      "purl": "pkg:generic/openssl@1.1.1q"
+    },
+    {
+      "bom-ref": "zlib",
+      "type": "library",
+      "name": "zlib",
+      "version": "1.2.12",
+      "supplier": { "name": "zlib project" },
+      "licenses": [{ "license": { "id": "Zlib" } }],
+      "cpe": "cpe:2.3:a:zlib:zlib:1.2.12:*:*:*:*:*:*:*",
+      "purl": "pkg:generic/zlib@1.2.12"
+    },
+    {
+      "bom-ref": "libcurl",
+      "type": "library",
+      "name": "libcurl",
+      "version": "7.84.0",
+      "supplier": { "name": "curl project" },
+      "licenses": [{ "license": { "id": "curl" } }],
+      "cpe": "cpe:2.3:a:haxx:libcurl:7.84.0:*:*:*:*:*:*:*",
+      "purl": "pkg:generic/curl@7.84.0"
+    },
+    {
+      "bom-ref": "mosquitto",
+      "type": "library",
+      "name": "mosquitto",
+      "version": "2.0.14",
+      "supplier": { "name": "Eclipse Foundation" },
+      "licenses": [{ "expression": "EPL-2.0 OR BSD-3-Clause" }],
+      "cpe": "cpe:2.3:a:eclipse:mosquitto:2.0.14:*:*:*:*:*:*:*",
+      "purl": "pkg:generic/mosquitto@2.0.14"
+    },
+    {
+      "bom-ref": "cjson",
+      "type": "library",
+      "name": "cjson",
+      "version": "1.7.14",
+      "supplier": { "name": "Dave Gamble and cJSON contributors" },
+      "licenses": [{ "license": { "id": "MIT" } }],
+      "cpe": "cpe:2.3:a:cjson_project:cjson:1.7.14:*:*:*:*:*:*:*",
+      "purl": "pkg:github/davegamble/cjson@v1.7.14"
+    },
+    {
+      "bom-ref": "pool-webui",
+      "type": "application",
+      "name": "pool-webui",
+      "version": "2.3.0",
+      "supplier": { "name": "Example Pool Systems GmbH" },
+      "licenses": [{ "license": { "name": "Proprietary" } }],
+      "purl": "pkg:generic/example/pool-webui@2.3.0",
+      "description": "Local configuration web UI (Python)"
+    },
+    {
+      "bom-ref": "flask",
+      "type": "library",
+      "name": "flask",
+      "version": "2.0.1",
+      "supplier": { "name": "Pallets" },
+      "licenses": [{ "license": { "id": "BSD-3-Clause" } }],
+      "purl": "pkg:pypi/flask@2.0.1"
+    },
+    {
+      "bom-ref": "werkzeug",
+      "type": "library",
+      "name": "werkzeug",
+      "version": "2.0.1",
+      "supplier": { "name": "Pallets" },
+      "licenses": [{ "license": { "id": "BSD-3-Clause" } }],
+      "purl": "pkg:pypi/werkzeug@2.0.1"
+    },
+    {
+      "bom-ref": "jinja2",
+      "type": "library",
+      "name": "jinja2",
+      "version": "3.0.1",
+      "supplier": { "name": "Pallets" },
+      "licenses": [{ "license": { "id": "BSD-3-Clause" } }],
+      "purl": "pkg:pypi/jinja2@3.0.1"
+    },
+    {
+      "bom-ref": "paho-mqtt",
+      "type": "library",
+      "name": "paho-mqtt",
+      "version": "1.5.1",
+      "supplier": { "name": "Eclipse Foundation" },
+      "licenses": [{ "expression": "EPL-2.0 OR EDL-1.0" }],
+      "purl": "pkg:pypi/paho-mqtt@1.5.1"
+    },
+    {
+      "bom-ref": "pyyaml",
+      "type": "library",
+      "name": "pyyaml",
+      "version": "5.3.1",
+      "supplier": { "name": "The YAML Project" },
+      "licenses": [{ "license": { "id": "MIT" } }],
+      "purl": "pkg:pypi/pyyaml@5.3.1"
+    }
+  ],
+  "dependencies": [
+    { "ref": "pool-controller-fw", "dependsOn": ["busybox", "openssl", "zlib", "libcurl", "mosquitto", "cjson", "pool-webui"] },
+    { "ref": "libcurl", "dependsOn": ["openssl", "zlib"] },
+    { "ref": "mosquitto", "dependsOn": ["openssl"] },
+    { "ref": "pool-webui", "dependsOn": ["flask", "paho-mqtt", "pyyaml"] },
+    { "ref": "flask", "dependsOn": ["werkzeug", "jinja2"] },
+    { "ref": "busybox", "dependsOn": [] },
+    { "ref": "openssl", "dependsOn": [] },
+    { "ref": "zlib", "dependsOn": [] },
+    { "ref": "cjson", "dependsOn": [] },
+    { "ref": "werkzeug", "dependsOn": [] },
+    { "ref": "jinja2", "dependsOn": [] },
+    { "ref": "paho-mqtt", "dependsOn": [] },
+    { "ref": "pyyaml", "dependsOn": [] }
+  ]
+}

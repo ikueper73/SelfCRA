@@ -1,0 +1,1193 @@
+{
+ "schema": 1,
+ "catalogVersion": "2026.11-1",
+ "meta": {
+  "title": "Example – Smart pool controller (consumer)",
+  "status": "draft",
+  "version": "0.1"
+ },
+ "profile": {
+  "markets": [
+   "consumer"
+  ],
+  "standards": {
+   "en18031": true,
+   "en303645": true,
+   "iec62443": false
+  },
+  "ukMarket": false,
+  "tailorMade": false
+ },
+ "method": {
+  "preset": "imported",
+  "label": "Imported from template",
+  "likelihoodColumns": [
+   "Exposure",
+   "Attacker effort",
+   "Indicators"
+  ],
+  "likelihood": [
+   {
+    "level": 1,
+    "label": "Rare",
+    "criteria": [
+     "Physical access + disassembly of a unit in the home",
+     "Expert, per-device effort, no scale benefit",
+     "No known technique"
+    ]
+   },
+   {
+    "level": 2,
+    "label": "Unlikely",
+    "criteria": [
+     "Physical access or radio range needed",
+     "Skilled, targeted at one household",
+     "Theoretical technique"
+    ]
+   },
+   {
+    "level": 3,
+    "label": "Possible",
+    "criteria": [
+     "Home LAN access needed (e.g. via other compromised IoT device)",
+     "Moderate skill; public tools",
+     "Technique published for similar products"
+    ]
+   },
+   {
+    "level": 4,
+    "label": "Likely",
+    "criteria": [
+     "Internet-reachable with weak / reused credentials",
+     "Low skill, scripted (credential stuffing)",
+     "Common against consumer IoT"
+    ]
+   },
+   {
+    "level": 5,
+    "label": "Almost certain",
+    "criteria": [
+     "Internet-exposed, unauthenticated, scannable",
+     "Fully automated botnets",
+     "Actively exploited in the wild"
+    ]
+   }
+  ],
+  "impactColumns": [
+   "Safety / health",
+   "Property & money",
+   "Privacy",
+   "Harm to others / scale"
+  ],
+  "impact": [
+   {
+    "level": 1,
+    "label": "Negligible",
+    "criteria": [
+     "None",
+     "None",
+     "No personal data",
+     "Single device, no effect on others"
+    ]
+   },
+   {
+    "level": 2,
+    "label": "Minor",
+    "criteria": [
+     "None",
+     "Small cost (energy, salt, chemicals)",
+     "Non-sensitive usage data of one user",
+     "Single household"
+    ]
+   },
+   {
+    "level": 3,
+    "label": "Moderate",
+    "criteria": [
+     "Discomfort (e.g. skin / eye irritation)",
+     "Repairable equipment damage",
+     "Personal data of one household; presence pattern",
+     "Many households, no harm to others"
+    ]
+   },
+   {
+    "level": 4,
+    "label": "Major",
+    "criteria": [
+     "Medical treatment needed",
+     "Water damage / flooding; equipment destroyed",
+     "Personal data of many users",
+     "Devices used against third parties (botnet)"
+    ]
+   },
+   {
+    "level": 5,
+    "label": "Severe",
+    "criteria": [
+     "Serious injury",
+     "Major property loss",
+     "Large-scale breach incl. presence / location data",
+     "Fleet-wide compromise"
+    ]
+   }
+  ],
+  "thresholds": [
+   {
+    "rating": "Critical",
+    "min": 16,
+    "rule": "Not acceptable. Must be mitigated before placing on the market."
+   },
+   {
+    "rating": "High",
+    "min": 10,
+    "rule": "Mitigate; residual High only with documented management acceptance and justification."
+   },
+   {
+    "rating": "Medium",
+    "min": 5,
+    "rule": "Mitigate where reasonable; acceptance by product security owner with justification. Safety-relevant risks: mitigate."
+   },
+   {
+    "rating": "Low",
+    "min": 1,
+    "rule": "Acceptable; monitor at periodic review."
+   }
+  ],
+  "approvedBy": "",
+  "approvedAt": ""
+ },
+ "reviewLog": [
+  {
+   "version": "0.1",
+   "date": "2026-10-25",
+   "author": "[Name]",
+   "trigger": "Initial assessment (EN 18031 / EN 303 645 baseline extended for CRA)",
+   "summary": "Created from consumer template; example risks to be validated.",
+   "risks": "R-001…R-011",
+   "approvedBy": "",
+   "approvalDate": ""
+  }
+ ],
+ "product": {
+  "name": "[Product] Smart Pool Controller – Wi-Fi, app control, pH/chlorine dosing, pump & heater control",
+  "model": "",
+  "versions": "HW rev x · FW x.y · iOS/Android app x.y · Cloud YYYY.MM",
+  "manufacturer": "[Company], [Product security owner]",
+  "securityOwner": "",
+  "intendedPurpose": "Automated control of private swimming pool water treatment (pH / chlorine dosing), filtration pump and heater, with monitoring and control via mobile app and cloud.",
+  "foreseeableUse": "Installed by consumers without professional help; setup left half-finished; weak or reused account passwords; shared household logins; insecure home Wi-Fi with other compromised IoT devices; resale with account still bound; use after end of support; pool service companies managing many customers' devices.",
+  "users": "Owner (admin) · household members (shared access) · pool service technician (delegated access) · voice assistant / smart-home integration",
+  "environment": "Private homes, outdoor technical room; consumer Wi-Fi router without IT management; children and swimmers present; manufacturer cloud in EU region.",
+  "essentialFunctions": "Safe dosing limits (never exceed max dose); filtration; frost protection; local operation without cloud.",
+  "safetyFunctions": "Chemical dosing (chlorine, acid), heater control. Limits enforced in firmware/hardware, not in app or cloud.",
+  "expectedLifetime": "",
+  "rdps": "User account & device cloud, app backend, push-notification service, OTA service",
+  "outOfScope": "Consumer's router and phone OS; third-party voice-assistant clouds (integration interface IS in scope)",
+  "personalData": "Account data, location (pool address / weather), usage patterns revealing presence, push tokens",
+  "thirdParty": "",
+  "hardwareDocs": ""
+ },
+ "classification": {
+  "selected": {},
+  "notes": "Smart-home product with security function (lock, camera, alarm, baby monitor)? (Annex III Class I): No\nSmart-home general-purpose virtual assistant? (Annex III Class I): No\nRouter / modem / hub routing traffic to the internet? (Annex III Class I): No [VERIFY – if a bridge/hub is sold with the product]\nConnected toy or health wearable? (Annex III Class I): No\n",
+  "reviewed": false,
+  "standardsInFull": "",
+  "route": "Module A (internal control)"
+ },
+ "supportPeriod": {
+  "years": "5",
+  "endDate": "",
+  "rationale": "e.g. 5 years from last unit sold / end date MM/YYYY",
+  "updateChannel": "",
+  "autoUpdates": "Enabled by default; user notified; can postpone; clear opt-out in app",
+  "endOfSupport": "Device keeps local operation; cloud features [continue / stop – define]; user informed in app"
+ },
+ "regulation": {
+  "red": "EN 18031-1 yes; EN 18031-2 yes (personal data); EN 18031-3 only if payments (e.g. chemical subscription)",
+  "machinery": "",
+  "productSafety": "LVD, GPSR, EN 60335-2-x; Machinery Regulation n/a [VERIFY]",
+  "nis2": "",
+  "customerFrameworks": "",
+  "ecosystems": "Matter / Apple Home / Alexa / Google certification [list]",
+  "psti": "[Y/N] – statement of compliance required",
+  "other": ""
+ },
+ "standardsApplied": [],
+ "components": [
+  {
+   "id": "Z-1",
+   "name": "Controller",
+   "description": "",
+   "location": "",
+   "operatedBy": "",
+   "scope": "Product (hardware/firmware)",
+   "slT": "",
+   "rationale": "",
+   "assumptions": ""
+  },
+  {
+   "id": "Z-2",
+   "name": "Mobile app",
+   "description": "",
+   "location": "",
+   "operatedBy": "",
+   "scope": "Product (software/app)",
+   "slT": "",
+   "rationale": "",
+   "assumptions": ""
+  },
+  {
+   "id": "Z-3",
+   "name": "Cloud",
+   "description": "",
+   "location": "",
+   "operatedBy": "",
+   "scope": "Remote data processing (RDPS)",
+   "slT": "",
+   "rationale": "",
+   "assumptions": ""
+  },
+  {
+   "id": "Z-4",
+   "name": "Controller PCB",
+   "description": "",
+   "location": "",
+   "operatedBy": "",
+   "scope": "Product (hardware/firmware)",
+   "slT": "",
+   "rationale": "",
+   "assumptions": ""
+  }
+ ],
+ "interfaces": [
+  {
+   "id": "I-01",
+   "name": "Cloud connection",
+   "from": "Z-1",
+   "to": "",
+   "protocol": "MQTT over TLS 8883, outbound",
+   "exposure": "Internet",
+   "protection": "Mutual TLS, per-device certificate",
+   "defaultState": "Enabled",
+   "needed": "Yes",
+   "remoteAccess": "",
+   "notes": ""
+  },
+  {
+   "id": "I-02",
+   "name": "Setup / provisioning",
+   "from": "Z-1",
+   "to": "",
+   "protocol": "BLE GATT or Wi-Fi SoftAP",
+   "exposure": "Radio range (BLE / Wi-Fi / Zigbee / LTE)",
+   "protection": "Per-device setup code (QR on label), encrypted",
+   "defaultState": "Enabled during setup only",
+   "needed": "Yes",
+   "remoteAccess": "",
+   "notes": "Must time out after setup"
+  },
+  {
+   "id": "I-03",
+   "name": "Local API / web UI",
+   "from": "Z-1",
+   "to": "",
+   "protocol": "HTTP(S) 80/443 on LAN",
+   "exposure": "Customer / home LAN",
+   "protection": "[define] – local token bound to account",
+   "defaultState": "Disabled",
+   "needed": "No",
+   "remoteAccess": "",
+   "notes": "Only enable if local control needed"
+  },
+  {
+   "id": "I-04",
+   "name": "App ↔ cloud",
+   "from": "Z-2",
+   "to": "",
+   "protocol": "HTTPS 443",
+   "exposure": "Internet",
+   "protection": "OIDC login, optional MFA, cert validation",
+   "defaultState": "Enabled",
+   "needed": "Yes",
+   "remoteAccess": "",
+   "notes": ""
+  },
+  {
+   "id": "I-05",
+   "name": "Voice / smart-home integration",
+   "from": "Z-3",
+   "to": "",
+   "protocol": "OAuth2 account linking; Matter",
+   "exposure": "Internet",
+   "protection": "Scoped tokens, revocable",
+   "defaultState": "Disabled",
+   "needed": "No",
+   "remoteAccess": "",
+   "notes": "Exclude safety functions from voice"
+  },
+  {
+   "id": "I-06",
+   "name": "Debug (UART / JTAG / SWD)",
+   "from": "Z-4",
+   "to": "",
+   "protocol": "Header on PCB",
+   "exposure": "Physical access to device",
+   "protection": "Locked in production",
+   "defaultState": "Disabled",
+   "needed": "No",
+   "remoteAccess": "",
+   "notes": ""
+  },
+  {
+   "id": "I-07",
+   "name": "Field bus to dosing pumps / heater relay",
+   "from": "Z-1",
+   "to": "",
+   "protocol": "RS-485 / relay outputs",
+   "exposure": "Physical access to device",
+   "protection": "None (local wiring)",
+   "defaultState": "Enabled",
+   "needed": "Yes",
+   "remoteAccess": "",
+   "notes": "Safety interlocks here"
+  },
+  {
+   "id": "I-08",
+   "name": "OTA update service",
+   "from": "Z-3",
+   "to": "",
+   "protocol": "HTTPS + signed images",
+   "exposure": "Internet",
+   "protection": "Code signing, HSM-held key",
+   "defaultState": "Enabled",
+   "needed": "Yes",
+   "remoteAccess": "",
+   "notes": ""
+  }
+ ],
+ "assets": [
+  {
+   "id": "A-01",
+   "name": "Chemical dosing control & safety limits",
+   "component": "Controller",
+   "type": "Function (safety-relevant)",
+   "description": "pH / chlorine setpoints, max dose per hour, flow interlock",
+   "c": "n/a",
+   "i": "High",
+   "a": "High",
+   "impact": "Chemical overdose – health hazard to swimmers"
+  },
+  {
+   "id": "A-02",
+   "name": "Pump & heater control",
+   "component": "Controller",
+   "type": "Function (essential)",
+   "description": "Schedules, temperature setpoint, frost protection",
+   "c": "n/a",
+   "i": "High",
+   "a": "Medium",
+   "impact": "Equipment damage, energy cost, frost damage"
+  },
+  {
+   "id": "A-03",
+   "name": "Home Wi-Fi credentials",
+   "component": "Controller",
+   "type": "Security asset",
+   "description": "SSID / PSK stored on device",
+   "c": "High",
+   "i": "Medium",
+   "a": "n/a",
+   "impact": "Access to user's home network"
+  },
+  {
+   "id": "A-04",
+   "name": "Device identity (key + certificate)",
+   "component": "Controller",
+   "type": "Security asset",
+   "description": "Per-device key in secure element",
+   "c": "High",
+   "i": "High",
+   "a": "Medium",
+   "impact": "Device impersonation; fleet compromise if shared"
+  },
+  {
+   "id": "A-05",
+   "name": "User account credentials & sessions",
+   "component": "Cloud / app",
+   "type": "Security asset",
+   "description": "Passwords (hashed), MFA, refresh tokens",
+   "c": "High",
+   "i": "High",
+   "a": "Medium",
+   "impact": "Account takeover → remote control"
+  },
+  {
+   "id": "A-06",
+   "name": "Usage & presence-revealing data",
+   "component": "Cloud",
+   "type": "Personal data",
+   "description": "Pool usage, heating schedules, vacation mode",
+   "c": "High",
+   "i": "Medium",
+   "a": "Low",
+   "impact": "Reveals when household is absent"
+  },
+  {
+   "id": "A-07",
+   "name": "Firmware & signing key",
+   "component": "Cloud / build",
+   "type": "Security asset",
+   "description": "Signed OTA images; signing key in HSM",
+   "c": "High",
+   "i": "High",
+   "a": "Medium",
+   "impact": "Fleet-wide malicious firmware"
+  },
+  {
+   "id": "A-08",
+   "name": "Owner contact & address data",
+   "component": "Cloud",
+   "type": "Personal data",
+   "description": "Name, e-mail, address / geolocation for weather",
+   "c": "High",
+   "i": "Medium",
+   "a": "Low",
+   "impact": "GDPR breach"
+  },
+  {
+   "id": "A-09",
+   "name": "Integration tokens",
+   "component": "Cloud",
+   "type": "Security asset",
+   "description": "OAuth tokens for voice assistants / smart-home hubs",
+   "c": "High",
+   "i": "High",
+   "a": "Low",
+   "impact": "Control via third-party platform"
+  }
+ ],
+ "risks": [
+  {
+   "id": "R-001",
+   "interfaces": "I-04",
+   "assets": "A-05, A-01",
+   "scenario": "Account takeover via credential stuffing; attacker changes dosing setpoints or disables filtration.",
+   "stride": "S - Spoofing",
+   "actor": "Credential-stuffing attacker",
+   "vector": "App / cloud login",
+   "consequence": "Pool water unsafe; equipment damage; user locked out",
+   "inherentL": "4",
+   "inherentI": "4",
+   "controls": "Breached-password check and minimum password policy; rate limiting and lockout; optional MFA (offered prominently); new-login notifications; safety limits enforced in firmware regardless of cloud command.",
+   "annex": [
+    "P1-2d",
+    "P1-2l"
+   ],
+   "en18031": [
+    "AUM",
+    "ACM"
+   ],
+   "en303645": [
+    "5.1",
+    "5.10"
+   ],
+   "iec62443": "",
+   "evidence": "Pen-test report §x; login-flow test TC-AUTH-01..06",
+   "residualL": "2",
+   "residualI": "3",
+   "treatment": "Mitigate",
+   "acceptance": "",
+   "owner": "Cloud Lead",
+   "status": "In progress",
+   "lastReviewed": "2026-10-25",
+   "source": "xlsx-import"
+  },
+  {
+   "id": "R-002",
+   "interfaces": "I-01 / I-04 / I-07",
+   "assets": "A-01",
+   "scenario": "Manipulated command or corrupted sensor value causes chemical overdose (chlorine / acid).",
+   "stride": "T - Tampering",
+   "actor": "Compromised cloud / supplier",
+   "vector": "Any control path to dosing pumps",
+   "consequence": "Health hazard to swimmers (skin, eyes, lungs)",
+   "inherentL": "3",
+   "inherentI": "5",
+   "controls": "Max dose per hour and per day enforced in firmware/hardware, not changeable remotely; flow-switch interlock (no dosing without circulation); plausibility checks on pH/ORP readings; range-validated commands; dosing events logged and notified.",
+   "annex": [
+    "P1-2f",
+    "P1-2k",
+    "P1-2h"
+   ],
+   "en18031": [
+    "ACM",
+    "GEC"
+   ],
+   "en303645": [
+    "5.13",
+    "5.7",
+    "5.6"
+   ],
+   "iec62443": "",
+   "evidence": "Safety test report; fault-injection test TC-DOSE-01..04",
+   "residualL": "1",
+   "residualI": "5",
+   "treatment": "Mitigate",
+   "acceptance": "",
+   "owner": "Hardware Lead",
+   "status": "Open",
+   "lastReviewed": "2026-10-25",
+   "source": "xlsx-import"
+  },
+  {
+   "id": "R-003",
+   "interfaces": "I-03",
+   "assets": "A-01, A-02",
+   "scenario": "Unauthenticated local API lets any device on the home LAN (e.g. a compromised camera) control the pool.",
+   "stride": "E - Elevation of privilege",
+   "actor": "Compromised device on home LAN",
+   "vector": "Local HTTP API",
+   "consequence": "Remote control without account",
+   "inherentL": "4",
+   "inherentI": "4",
+   "controls": "Local API disabled by default; when enabled, requires token bound to owner account; TLS; no UPnP / port forwarding.",
+   "annex": [
+    "P1-2b",
+    "P1-2d",
+    "P1-2j"
+   ],
+   "en18031": [
+    "ACM",
+    "AUM",
+    "GEC"
+   ],
+   "en303645": [
+    "5.1",
+    "5.6"
+   ],
+   "iec62443": "",
+   "evidence": "Port scan of default config; API auth test",
+   "residualL": "1",
+   "residualI": "4",
+   "treatment": "Mitigate",
+   "acceptance": "",
+   "owner": "Firmware Lead",
+   "status": "Implemented",
+   "lastReviewed": "2026-10-25",
+   "source": "xlsx-import"
+  },
+  {
+   "id": "R-004",
+   "interfaces": "I-02",
+   "assets": "A-03",
+   "scenario": "Open or weakly protected provisioning (SoftAP / BLE) lets a nearby attacker capture the home Wi-Fi password or claim the device.",
+   "stride": "I - Information disclosure",
+   "actor": "Nearby attacker (radio range)",
+   "vector": "Setup mode",
+   "consequence": "Home network compromise; device hijack",
+   "inherentL": "3",
+   "inherentI": "3",
+   "controls": "Per-device setup code from label / QR; encrypted provisioning channel; setup mode times out and requires physical button to re-enter; device claiming bound to first authenticated owner.",
+   "annex": [
+    "P1-2e",
+    "P1-2d"
+   ],
+   "en18031": [
+    "SCM",
+    "AUM"
+   ],
+   "en303645": [
+    "5.5",
+    "5.4",
+    "5.12"
+   ],
+   "iec62443": "",
+   "evidence": "Provisioning sniff test",
+   "residualL": "1",
+   "residualI": "3",
+   "treatment": "Mitigate",
+   "acceptance": "",
+   "owner": "Firmware Lead",
+   "status": "Open",
+   "lastReviewed": "2026-10-25",
+   "source": "xlsx-import"
+  },
+  {
+   "id": "R-005",
+   "interfaces": "I-01",
+   "assets": "A-04",
+   "scenario": "Device recruited into a botnet through an outdated third-party component and used to attack others.",
+   "stride": "E - Elevation of privilege",
+   "actor": "Opportunistic remote attacker / botnet",
+   "vector": "Vulnerable network service",
+   "consequence": "Harm to third parties; device unstable",
+   "inherentL": "4",
+   "inherentI": "4",
+   "controls": "Minimal exposed services; SBOM per release; vulnerability monitoring with patch SLA; release gate: no known exploitable vulnerabilities; outbound traffic limits.",
+   "annex": [
+    "P1-2a",
+    "P1-2i",
+    "P2-1",
+    "P2-2"
+   ],
+   "en18031": [
+    "GEC",
+    "SUM",
+    "TCM"
+   ],
+   "en303645": [
+    "5.3",
+    "5.6"
+   ],
+   "iec62443": "",
+   "evidence": "SBOM (CycloneDX); release vuln scan",
+   "residualL": "2",
+   "residualI": "3",
+   "treatment": "Mitigate",
+   "acceptance": "",
+   "owner": "PSIRT",
+   "status": "In progress",
+   "lastReviewed": "2026-10-25",
+   "source": "xlsx-import"
+  },
+  {
+   "id": "R-006",
+   "interfaces": "I-08",
+   "assets": "A-01, A-04",
+   "scenario": "Users never install updates, so fixed vulnerabilities stay exploitable in the field.",
+   "stride": "E - Elevation of privilege",
+   "actor": "Careless user / misconfiguration",
+   "vector": "Field population of old firmware",
+   "consequence": "Known exploitable vulnerabilities in the field",
+   "inherentL": "4",
+   "inherentI": "3",
+   "controls": "Automatic security updates on by default; user notified, can postpone; clear opt-out; security fixes delivered separately from feature updates; update status visible in app.",
+   "annex": [
+    "P1-2c",
+    "P2-7",
+    "P2-8"
+   ],
+   "en18031": [
+    "SUM"
+   ],
+   "en303645": [
+    "5.3"
+   ],
+   "iec62443": "",
+   "evidence": "Update telemetry: % fleet on latest FW",
+   "residualL": "2",
+   "residualI": "3",
+   "treatment": "Mitigate",
+   "acceptance": "",
+   "owner": "Product Owner",
+   "status": "Open",
+   "lastReviewed": "2026-10-25",
+   "source": "xlsx-import"
+  },
+  {
+   "id": "R-007",
+   "interfaces": "I-04 / Controller",
+   "assets": "A-05, A-06, A-08",
+   "scenario": "After resale, previous owner keeps app access or personal data remains on device / in cloud.",
+   "stride": "I - Information disclosure",
+   "actor": "Previous owner / household member",
+   "vector": "Account binding; factory state",
+   "consequence": "Privacy breach; previous owner controls new owner's pool",
+   "inherentL": "3",
+   "inherentI": "3",
+   "controls": "Factory reset on device removes all user data and unbinds account; owner transfer flow in app; cloud data deletion on unbind; new owner sees list of users with access.",
+   "annex": [
+    "P1-2m",
+    "P1-2d"
+   ],
+   "en18031": [
+    "DLM",
+    "ACM"
+   ],
+   "en303645": [
+    "5.11"
+   ],
+   "iec62443": "",
+   "evidence": "Reset test TC-DEL-01..03",
+   "residualL": "1",
+   "residualI": "3",
+   "treatment": "Mitigate",
+   "acceptance": "",
+   "owner": "Product Owner",
+   "status": "Open",
+   "lastReviewed": "2026-10-25",
+   "source": "xlsx-import"
+  },
+  {
+   "id": "R-008",
+   "interfaces": "Cloud",
+   "assets": "A-06, A-08",
+   "scenario": "Cloud breach exposes usage patterns showing when households are absent (vacation mode, heating off).",
+   "stride": "I - Information disclosure",
+   "actor": "Opportunistic remote attacker / botnet",
+   "vector": "Cloud database / API",
+   "consequence": "Burglary targeting; GDPR breach",
+   "inherentL": "2",
+   "inherentI": "4",
+   "controls": "Data minimisation (no exact location stored, only weather region); encryption at rest; retention limits; access logging; vacation mode not exposed in third-party integrations.",
+   "annex": [
+    "P1-2e",
+    "P1-2g"
+   ],
+   "en18031": [
+    "SSM",
+    "SCM"
+   ],
+   "en303645": [
+    "5.8",
+    "6"
+   ],
+   "iec62443": "",
+   "evidence": "Data inventory; DPIA; cloud pen-test",
+   "residualL": "1",
+   "residualI": "4",
+   "treatment": "Mitigate",
+   "acceptance": "",
+   "owner": "DPO / Cloud Lead",
+   "status": "Open",
+   "lastReviewed": "2026-10-25",
+   "source": "xlsx-import"
+  },
+  {
+   "id": "R-009",
+   "interfaces": "Cloud",
+   "assets": "A-01, A-02",
+   "scenario": "Cloud outage or end of cloud service leaves the pool without control or makes the device unusable.",
+   "stride": "D - Denial of service",
+   "actor": "Compromised cloud / supplier",
+   "vector": "Loss of cloud connectivity",
+   "consequence": "Unsafe water chemistry; frost damage",
+   "inherentL": "3",
+   "inherentI": "3",
+   "controls": "Controller runs autonomously on last valid schedule and safety limits; local control via button / display; documented end-of-support behaviour shown to users.",
+   "annex": [
+    "P1-2h"
+   ],
+   "en18031": [
+    "RLM"
+   ],
+   "en303645": [
+    "5.9"
+   ],
+   "iec62443": "",
+   "evidence": "Offline test TC-AV-01",
+   "residualL": "1",
+   "residualI": "3",
+   "treatment": "Mitigate",
+   "acceptance": "",
+   "owner": "Product Owner",
+   "status": "Implemented",
+   "lastReviewed": "2026-10-25",
+   "source": "xlsx-import"
+  },
+  {
+   "id": "R-010",
+   "interfaces": "I-06",
+   "assets": "A-04, A-03",
+   "scenario": "Debug port used to extract a key or credential shared across all devices, enabling fleet-wide impersonation.",
+   "stride": "S - Spoofing",
+   "actor": "Opportunistic remote attacker / botnet",
+   "vector": "UART / JTAG on a purchased unit",
+   "consequence": "Fleet-wide compromise",
+   "inherentL": "2",
+   "inherentI": "5",
+   "controls": "Unique per-device keys in secure element; debug interfaces locked / disabled in production; flash encryption; no hard-coded credentials.",
+   "annex": [
+    "P1-2e",
+    "P1-2j"
+   ],
+   "en18031": [
+    "SSM",
+    "CCK",
+    "GEC"
+   ],
+   "en303645": [
+    "5.4",
+    "5.6"
+   ],
+   "iec62443": "",
+   "evidence": "Hardware teardown test",
+   "residualL": "1",
+   "residualI": "2",
+   "treatment": "Mitigate",
+   "acceptance": "",
+   "owner": "Hardware Lead",
+   "status": "Open",
+   "lastReviewed": "2026-10-25",
+   "source": "xlsx-import"
+  },
+  {
+   "id": "R-011",
+   "interfaces": "I-05",
+   "assets": "A-09, A-02",
+   "scenario": "Voice-assistant / smart-home integration token abused to control pool functions.",
+   "stride": "E - Elevation of privilege",
+   "actor": "Opportunistic remote attacker / botnet",
+   "vector": "Third-party platform account",
+   "consequence": "Unwanted heating / pump operation",
+   "inherentL": "3",
+   "inherentI": "3",
+   "controls": "Scoped OAuth tokens; safety-relevant functions (dosing) not exposed to integrations; token revocation in app; integration disabled by default.",
+   "annex": [
+    "P1-2d",
+    "P1-2b"
+   ],
+   "en18031": [
+    "ACM"
+   ],
+   "en303645": [
+    "5.6",
+    "5.5"
+   ],
+   "iec62443": "",
+   "evidence": "Integration scope review",
+   "residualL": "2",
+   "residualI": "2",
+   "treatment": "Mitigate",
+   "acceptance": "",
+   "owner": "Cloud Lead",
+   "status": "Open",
+   "lastReviewed": "2026-10-25",
+   "source": "xlsx-import"
+  }
+ ],
+ "annexI": {
+  "P1-1": {
+   "applicable": "Yes",
+   "justification": "",
+   "implementation": "",
+   "evidence": ""
+  },
+  "P1-2a": {
+   "applicable": "Yes",
+   "justification": "",
+   "implementation": "",
+   "evidence": ""
+  },
+  "P1-2b": {
+   "applicable": "Yes",
+   "justification": "",
+   "implementation": "Local API, integrations and debug off by default; unique per-device setup code; factory reset button.",
+   "evidence": "Default config checklist DC-01"
+  },
+  "P1-2c": {
+   "applicable": "Yes",
+   "justification": "",
+   "implementation": "",
+   "evidence": ""
+  },
+  "P1-2d": {
+   "applicable": "Yes",
+   "justification": "",
+   "implementation": "",
+   "evidence": ""
+  },
+  "P1-2e": {
+   "applicable": "Yes",
+   "justification": "",
+   "implementation": "",
+   "evidence": ""
+  },
+  "P1-2f": {
+   "applicable": "Yes",
+   "justification": "",
+   "implementation": "",
+   "evidence": ""
+  },
+  "P1-2g": {
+   "applicable": "Yes",
+   "justification": "",
+   "implementation": "",
+   "evidence": ""
+  },
+  "P1-2h": {
+   "applicable": "Yes",
+   "justification": "",
+   "implementation": "",
+   "evidence": ""
+  },
+  "P1-2i": {
+   "applicable": "Yes",
+   "justification": "",
+   "implementation": "",
+   "evidence": ""
+  },
+  "P1-2j": {
+   "applicable": "Yes",
+   "justification": "",
+   "implementation": "",
+   "evidence": ""
+  },
+  "P1-2k": {
+   "applicable": "Yes",
+   "justification": "",
+   "implementation": "",
+   "evidence": ""
+  },
+  "P1-2l": {
+   "applicable": "Yes",
+   "justification": "",
+   "implementation": "",
+   "evidence": ""
+  },
+  "P1-2m": {
+   "applicable": "Yes",
+   "justification": "",
+   "implementation": "",
+   "evidence": ""
+  },
+  "P2-1": {
+   "applicable": "Yes",
+   "justification": "",
+   "implementation": "",
+   "evidence": ""
+  },
+  "P2-2": {
+   "applicable": "Yes",
+   "justification": "",
+   "implementation": "",
+   "evidence": ""
+  },
+  "P2-3": {
+   "applicable": "Yes",
+   "justification": "",
+   "implementation": "",
+   "evidence": ""
+  },
+  "P2-4": {
+   "applicable": "Yes",
+   "justification": "",
+   "implementation": "",
+   "evidence": ""
+  },
+  "P2-5": {
+   "applicable": "Yes",
+   "justification": "",
+   "implementation": "CVD policy published at /security, shared with all product lines; triage SLA 5 working days.",
+   "evidence": "PSIRT-POL-001"
+  },
+  "P2-6": {
+   "applicable": "Yes",
+   "justification": "",
+   "implementation": "security@[company] + security.txt; contact also in user manual.",
+   "evidence": "security.txt; manual §x"
+  },
+  "P2-7": {
+   "applicable": "Yes",
+   "justification": "",
+   "implementation": "",
+   "evidence": ""
+  },
+  "P2-8": {
+   "applicable": "Yes",
+   "justification": "",
+   "implementation": "",
+   "evidence": ""
+  }
+ },
+ "en303645": {
+  "6": {
+   "applicable": "Yes",
+   "justification": "",
+   "implementation": "",
+   "evidence": ""
+  },
+  "5.1": {
+   "applicable": "Yes",
+   "justification": "",
+   "implementation": "",
+   "evidence": ""
+  },
+  "5.2": {
+   "applicable": "Yes",
+   "justification": "",
+   "implementation": "CVD policy shared across product lines; security.txt",
+   "evidence": "PSIRT-POL-001"
+  },
+  "5.3": {
+   "applicable": "Yes",
+   "justification": "",
+   "implementation": "",
+   "evidence": ""
+  },
+  "5.4": {
+   "applicable": "Yes",
+   "justification": "",
+   "implementation": "",
+   "evidence": ""
+  },
+  "5.5": {
+   "applicable": "Yes",
+   "justification": "",
+   "implementation": "",
+   "evidence": ""
+  },
+  "5.6": {
+   "applicable": "Yes",
+   "justification": "",
+   "implementation": "",
+   "evidence": ""
+  },
+  "5.7": {
+   "applicable": "Yes",
+   "justification": "",
+   "implementation": "",
+   "evidence": ""
+  },
+  "5.8": {
+   "applicable": "Yes",
+   "justification": "",
+   "implementation": "",
+   "evidence": ""
+  },
+  "5.9": {
+   "applicable": "Yes",
+   "justification": "",
+   "implementation": "",
+   "evidence": ""
+  },
+  "5.10": {
+   "applicable": "Yes",
+   "justification": "",
+   "implementation": "",
+   "evidence": ""
+  },
+  "5.11": {
+   "applicable": "Yes",
+   "justification": "",
+   "implementation": "",
+   "evidence": ""
+  },
+  "5.12": {
+   "applicable": "Yes",
+   "justification": "",
+   "implementation": "",
+   "evidence": ""
+  },
+  "5.13": {
+   "applicable": "Yes",
+   "justification": "",
+   "implementation": "",
+   "evidence": ""
+  }
+ },
+ "userInfo": {
+  "U-01": {
+   "where": "",
+   "content": "",
+   "owner": "",
+   "status": "Open",
+   "evidence": ""
+  },
+  "U-02": {
+   "where": "",
+   "content": "",
+   "owner": "",
+   "status": "Open",
+   "evidence": ""
+  },
+  "U-03": {
+   "where": "",
+   "content": "",
+   "owner": "",
+   "status": "Open",
+   "evidence": ""
+  },
+  "U-04": {
+   "where": "",
+   "content": "",
+   "owner": "",
+   "status": "Open",
+   "evidence": ""
+  },
+  "U-05": {
+   "where": "",
+   "content": "",
+   "owner": "",
+   "status": "Open",
+   "evidence": ""
+  },
+  "U-06": {
+   "where": "",
+   "content": "",
+   "owner": "",
+   "status": "Open",
+   "evidence": ""
+  },
+  "U-07": {
+   "where": "",
+   "content": "",
+   "owner": "",
+   "status": "Open",
+   "evidence": ""
+  },
+  "U-08": {
+   "where": "Point of sale / online shop",
+   "content": "'Security updates until MM/YYYY' on packaging and product page",
+   "owner": "",
+   "status": "Open",
+   "evidence": ""
+  },
+  "U-09": {
+   "where": "",
+   "content": "",
+   "owner": "",
+   "status": "Open",
+   "evidence": ""
+  },
+  "U-10": {
+   "where": "",
+   "content": "",
+   "owner": "",
+   "status": "Open",
+   "evidence": ""
+  },
+  "U-11": {
+   "where": "",
+   "content": "",
+   "owner": "",
+   "status": "Open",
+   "evidence": ""
+  },
+  "U-12": {
+   "where": "In-app",
+   "content": "Settings → Remove device → erases device + cloud data; manual §x",
+   "owner": "",
+   "status": "Open",
+   "evidence": ""
+  },
+  "U-13": {
+   "where": "In-app",
+   "content": "Settings → Updates → Automatic security updates toggle",
+   "owner": "",
+   "status": "Open",
+   "evidence": ""
+  },
+  "U-14": {
+   "where": "",
+   "content": "",
+   "owner": "",
+   "status": "Open",
+   "evidence": ""
+  },
+  "U-15": {
+   "where": "",
+   "content": "",
+   "owner": "",
+   "status": "Open",
+   "evidence": ""
+  },
+  "U-16": {
+   "where": "",
+   "content": "",
+   "owner": "",
+   "status": "Open",
+   "evidence": ""
+  }
+ }
+}
