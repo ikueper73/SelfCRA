@@ -1,0 +1,106 @@
+# .github/workflows/sonatype-pr.yml
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]          # keeps the "build" report in Lifecycle current after merge
+  schedule:
+    - cron: '23 4 * * 1'      # weekly re-scan: new CodeQL queries / new Sonatype vulnerability data
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  LC_APPLICATION_ID: my-js-app          # same ID as the app you imported via SCM onboarding
+  NODE_VERSION: '22'
+
+jobs:
+  build-test:
+    name: Build & test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      - run: npm run lint --if-present
+      - run: npm test --if-present
+      - run: npm run build --if-present
+
+  codeql:
+    name: CodeQL analysis
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write   # upload results to code scanning
+      actions: read
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@915412ff23e8b7659517e607487dbeae018f2934 # v4.39.5
+        with:
+          languages: javascript-typescript
+          build-mode: none                 # JS/TS is analyzed from source, no build needed
+          queries: security-extended       # broader security query suite than the default
+
+      - name: Perform CodeQL analysis
+        uses: github/codeql-action/analyze@915412ff23e8b7659517e607487dbeae018f2934 # v4.39.5
+        with:
+          category: '/language:javascript-typescript'
+
+  sonatype-lifecycle:
+    name: Sonatype Lifecycle policy evaluation
+    runs-on: ubuntu-latest
+    # Fork PRs get no secrets -> skip instead of failing
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+    permissions:
+      contents: read
+      security-events: write   # only needed for upload-sarif-file (GitHub Advanced Security)
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      # Installs exact versions from the lock file so dependency code is available to the analysis.
+      # --ignore-scripts: don't run install hooks of not-yet-vetted dependencies in the security job.
+      - run: npm ci --ignore-scripts
+
+      - name: Sonatype Lifecycle evaluation (with JS reachability)
+        id: evaluate
+        # Pin to the commit SHA of v1.16.0 (supply-chain hardening)
+        uses: sonatype/actions/evaluate@8c4abefc47a5f0f8dd124f0bb60e48aafec7b2de # v1.16.0
+        with:
+          iq-server-url: ${{ vars.SONATYPE_LIFECYCLE_URL }}
+          username: ${{ secrets.SONATYPE_LIFECYCLE_USERNAME }}   # user-token code, not a personal password
+          password: ${{ secrets.SONATYPE_LIFECYCLE_PASSWORD }}   # user-token passcode
+          application-id: ${{ env.LC_APPLICATION_ID }}
+          scan-targets: package.json package-lock.json
+          # PRs evaluate in "develop" so they don't overwrite the main-branch "build" report
+          stage: ${{ github.event_name == 'pull_request' && 'develop' || 'build' }}
+          # --- JavaScript reachability ---
+          enable-reachability-js: true
+          reachability-js-project-root: .
+          reachability-js-sources: 'src/**/*.js src/**/*.ts src/**/*.jsx src/**/*.tsx'
+          reachability-js-excludes: '**/*.test.* **/*.spec.* **/__tests__/** **/__mocks__/** dist/** build/** coverage/**'
+          # --- optional: findings into GitHub Security tab (requires GHAS / Code Security) ---
+          upload-sarif-file: true
+
+      - name: Job summary
+        if: always()
+        run: |
+          echo "### Sonatype Lifecycle" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Report: ${{ steps.evaluate.outputs.report-url }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "- CLI exit code: ${{ steps.evaluate.outputs.cli-exit-code }}" >> "$GITHUB_STEP_SUMMARY"
