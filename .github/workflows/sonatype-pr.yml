@@ -20,17 +20,22 @@ concurrency:
 env:
   LC_APPLICATION_ID: my-js-app          # same ID as the app you imported via SCM onboarding
   NODE_VERSION: '22'
+  APP_DIR: app                          # Node project (package.json / package-lock.json) lives here
 
 jobs:
   build-test:
     name: Build & test
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ env.APP_DIR }}
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-node@v5
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: npm
+          cache-dependency-path: app/package-lock.json
       - run: npm ci
       - run: npm run lint --if-present
       - run: npm test --if-present
@@ -73,10 +78,12 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: npm
+          cache-dependency-path: app/package-lock.json
 
       # Installs exact versions from the lock file so dependency code is available to the analysis.
       # --ignore-scripts: don't run install hooks of not-yet-vetted dependencies in the security job.
       - run: npm ci --ignore-scripts
+        working-directory: ${{ env.APP_DIR }}
 
       - name: Sonatype Lifecycle evaluation (with JS reachability)
         id: evaluate
@@ -87,14 +94,14 @@ jobs:
           username: ${{ secrets.SONATYPE_LIFECYCLE_USERNAME }}   # user-token code, not a personal password
           password: ${{ secrets.SONATYPE_LIFECYCLE_PASSWORD }}   # user-token passcode
           application-id: ${{ env.LC_APPLICATION_ID }}
-          scan-targets: package.json package-lock.json
+          scan-targets: app/package.json app/package-lock.json
           # PRs evaluate in "develop" so they don't overwrite the main-branch "build" report
           stage: ${{ github.event_name == 'pull_request' && 'develop' || 'build' }}
           # --- JavaScript reachability ---
           enable-reachability-js: true
-          reachability-js-project-root: .
+          reachability-js-project-root: app
           reachability-js-sources: 'src/**/*.js src/**/*.ts src/**/*.jsx src/**/*.tsx'
-          reachability-js-excludes: '**/*.test.* **/*.spec.* **/__tests__/** **/__mocks__/** dist/** build/** coverage/**'
+          reachability-js-excludes: 'test/** **/*.test.* **/*.spec.* **/__tests__/** **/__mocks__/** dist/** build/** coverage/**'
           # --- optional: findings into GitHub Security tab (requires GHAS / Code Security) ---
           upload-sarif-file: true
 
