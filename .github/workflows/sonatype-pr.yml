@@ -18,7 +18,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  LC_APPLICATION_ID: my-js-app          # same ID as the app you imported via SCM onboarding
+  LC_APPLICATION_ID: ${{ vars.SONATYPE_LIFECYCLE_APP_ID }}   # Application ID as shown in IQ Server (Orgs & Policies > app > ID)
   NODE_VERSION: '22'
   APP_DIR: app                          # Node project (package.json / package-lock.json) lives here
 
